@@ -1,8 +1,8 @@
 pipeline {
-  agent { label 'built-in' }  
 
+   agent { label 'built-in' }
   environment {
-    PATH = "/opt/homebrew/bin:/usr/local/bin:${env.PATH}"
+    PATH = "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/bin:/bin"
   }
 
   stages {
@@ -12,7 +12,7 @@ pipeline {
       }
     }
 
-    stage('Env Check') {
+    stage('Env Check') {TE
       steps {
         sh '''
           echo "System info:"
