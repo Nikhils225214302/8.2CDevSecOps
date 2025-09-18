@@ -43,19 +43,24 @@ pipeline {
     }
 
         stage('SonarCloud Analysis') {
-      steps {
-        withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
-          sh '''
-            set -e
-            SCANNER_VER=6.2.1.4610
-            SCANNER_ZIP=sonar-scanner-cli-${SCANNER_VER}-linux.zip
-            curl -fsSLO https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/$SCANNER_ZIP
-            unzip -qo $SCANNER_ZIP
-            export PATH="$PWD/sonar-scanner-${SCANNER_VER}-linux/bin:$PATH"
-            sonar-scanner -Dsonar.login=$SONAR_TOKEN
-          '''
-        }
-      }
+  steps {
+    withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+      sh '''
+        set -euxo pipefail
+
+        # Ensure Java is available for the scanner (macOS)
+        if [ -x /usr/libexec/java_home ]; then
+          export JAVA_HOME="$((/usr/libexec/java_home -v 17) || (/usr/libexec/java_home))" || true
+          export PATH="$JAVA_HOME/bin:$PATH"
+        fi
+        java -version || true
+
+        # Use sonar-scanner installed via Homebrew (no downloads)
+        which sonar-scanner
+        sonar-scanner -Dsonar.login="$SONAR_TOKEN"
+      '''
     }
+  }
+}
   }
 }
