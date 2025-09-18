@@ -12,7 +12,7 @@ pipeline {
       }
     }
 
-    stage('Env Check') {TE
+    stage('Env Check') {
       steps {
         sh '''
           echo "System info:"
