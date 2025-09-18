@@ -42,7 +42,7 @@ pipeline {
       steps { sh 'npm audit || true' }  // show CVEs in console output
     }
 
-    stage('SonarCloud Analysis') {
+        stage('SonarCloud Analysis') {
       steps {
         withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
           sh '''
